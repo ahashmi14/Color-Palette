@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import ColorCard from "./ColorCard";
+import paletteNames from "./paletteNames";
 
 function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
   const [palette, setPalette] = useState([]);
   const [showPalette, setShowPalette] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [paletteName, setPaletteName] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
 
-  // ✨ Apply dark mode to <body> tag
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
@@ -30,23 +32,32 @@ function App() {
     );
   };
 
+  const generateRandomName = () => {
+    const i = Math.floor(Math.random() * paletteNames.length);
+    return paletteNames[i];
+  };
+
   const generatePalette = () => {
     const picked = userColors.filter((c) => c);
     const needed = 5 - picked.length;
     const randoms = Array.from({ length: needed }, () => generateRandomColor());
     setPalette([...picked, ...randoms]);
+    setPaletteName(generateRandomName());
     setShowPalette(true);
+    setIsEditingName(false);
   };
 
   const handleBack = () => {
     setShowPalette(false);
     setPalette([]);
+    setPaletteName("");
+    setIsEditingName(false);
   };
 
   const canGenerate = userColors.some((color) => color);
 
   return (
-    <div className={`App`}>
+    <div className="App">
       <div className="top-bar">
         <h1>🎨 Color Palette Generator</h1>
         <button className="toggle-btn" onClick={() => setDarkMode(!darkMode)}>
@@ -64,11 +75,21 @@ function App() {
             transition={{ duration: 0.5 }}
             className="glass-panel"
           >
-            <p>Select up to 3 base colors:</p>
+            <p
+              className="gradient-text"
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: "700",
+                marginBottom: "2.5rem",
+              }}
+            >
+              Select up to 3 base colors:
+            </p>
+
             <div className="color-picker-container">
               {userColors.map((color, index) => (
                 <div key={index} className="color-picker fancy-picker">
-                  <label>Color {index + 1}</label>
+                  <label className="gradient-text">Color {index + 1}</label>
                   <input
                     type="color"
                     value={color || "#000000"}
@@ -77,6 +98,7 @@ function App() {
                 </div>
               ))}
             </div>
+
             <button onClick={generatePalette} disabled={!canGenerate}>
               Generate Palette
             </button>
@@ -89,6 +111,25 @@ function App() {
             exit={{ opacity: 0, y: -40 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
           >
+            <div className="palette-title-container">
+              {isEditingName ? (
+                <input
+                  className="palette-name-input"
+                  value={paletteName}
+                  onChange={(e) => setPaletteName(e.target.value)}
+                  onBlur={() => setIsEditingName(false)}
+                  autoFocus
+                />
+              ) : (
+                <h2
+                  className="palette-name"
+                  onClick={() => setIsEditingName(true)}
+                >
+                  {paletteName}
+                </h2>
+              )}
+            </div>
+
             <div className="palette">
               {palette.map((color, index) => (
                 <motion.div

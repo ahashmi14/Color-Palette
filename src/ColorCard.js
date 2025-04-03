@@ -1,18 +1,20 @@
 import React from "react";
+import "./ColorCard.css";
 
 function ColorCard({ color }) {
-  const copyToClipboard = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(color);
-    alert(`Copied ${color} to clipboard!`);
   };
 
   return (
-    <div className="color-card" style={{ backgroundColor: color }}>
+    <div className="color-card">
+      <div className="color-display" style={{ backgroundColor: color }} />
       <p className="color-code">{color}</p>
-      <button onClick={copyToClipboard}>Copy</button>
+      <button className="copy-btn" onClick={handleCopy}>
+        Copy
+      </button>
     </div>
   );
 }
 
 export default ColorCard;
-
