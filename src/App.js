@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ColorCard from "./ColorCard";
 import paletteNames from "./paletteNames";
 import FullscreenPreview from "./FullscreenPreview";
+import CarPreview from "./CarPreview";
 
 function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
@@ -13,6 +14,8 @@ function App() {
   const [paletteName, setPaletteName] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
+  const [showCarPreview, setShowCarPreview] = useState(false);
+  const [showCreditsPopup, setShowCreditsPopup] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -42,7 +45,9 @@ function App() {
   const generatePalette = () => {
     const picked = userColors.filter((c) => c);
     const needed = 5 - picked.length;
-    const randoms = Array.from({ length: needed }, () => generateRandomColor());
+    const randoms = Array.from({ length: needed }, () =>
+      generateRandomColor()
+    );
     setPalette([...picked, ...randoms]);
     setPaletteName(generateRandomName());
     setShowPalette(true);
@@ -57,11 +62,22 @@ function App() {
   };
 
   const canGenerate = userColors.some((color) => color);
+  const showCredits = !showFullscreen && !showCarPreview;
 
   return (
     <div className="App">
       {showFullscreen && (
-        <FullscreenPreview palette={palette} onClose={() => setShowFullscreen(false)} />
+        <FullscreenPreview
+          palette={palette}
+          onClose={() => setShowFullscreen(false)}
+        />
+      )}
+
+      {showCarPreview && (
+        <CarPreview
+          palette={palette}
+          onClose={() => setShowCarPreview(false)}
+        />
       )}
 
       <div className="top-bar">
@@ -153,13 +169,86 @@ function App() {
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2rem" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "1rem",
+                justifyContent: "center",
+                marginBottom: "2rem",
+              }}
+            >
               <button onClick={handleBack}>Back to Picker</button>
-              <button onClick={() => setShowFullscreen(true)}>Fullscreen Preview</button>
+              <button onClick={() => setShowFullscreen(true)}>
+                Fullscreen Preview
+              </button>
+              <button onClick={() => setShowCarPreview(true)}>
+                3D Car Preview
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showCredits && (
+        <>
+          <div
+            style={{
+              marginTop: "2rem",
+              fontSize: "0.75rem",
+              opacity: 0.6,
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+            onClick={() => setShowCreditsPopup(true)}
+          >
+            Credits
+          </div>
+
+          {showCreditsPopup && (
+            <div
+              style={{
+                position: "fixed",
+                bottom: "2rem",
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "rgba(0, 0, 0, 0.85)",
+                color: "#fff",
+                padding: "1rem 1.5rem",
+                borderRadius: "12px",
+                fontSize: "0.75rem",
+                maxWidth: "90vw",
+                zIndex: 9999,
+                textAlign: "center",
+              }}
+              onClick={() => setShowCreditsPopup(false)}
+            >
+              Car render: "Lamborghini Aventador SVJ SDC ( FREE )" (
+              <a
+                href="https://skfb.ly/6ZNGP"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#4ade80" }}
+              >
+                https://skfb.ly/6ZNGP
+              </a>
+              ) by SDC PERFORMANCE™️ is licensed under{" "}
+              <a
+                href="http://creativecommons.org/licenses/by/4.0/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#4ade80" }}
+              >
+                Creative Commons Attribution
+              </a>
+              .
+              <br />
+              <span style={{ opacity: 0.6, display: "block", marginTop: "0.5rem" }}>
+                (Click to close)
+              </span>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
