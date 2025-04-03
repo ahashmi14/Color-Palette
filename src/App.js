@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import ColorCard from "./ColorCard";
@@ -8,6 +8,15 @@ function App() {
   const [palette, setPalette] = useState([]);
   const [showPalette, setShowPalette] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  // ✨ Apply dark mode to <body> tag
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   const handleColorChange = (index, value) => {
     const updatedColors = [...userColors];
@@ -37,7 +46,7 @@ function App() {
   const canGenerate = userColors.some((color) => color);
 
   return (
-    <div className={`App ${darkMode ? "dark" : ""}`}>
+    <div className={`App`}>
       <div className="top-bar">
         <h1>🎨 Color Palette Generator</h1>
         <button className="toggle-btn" onClick={() => setDarkMode(!darkMode)}>
@@ -58,7 +67,7 @@ function App() {
             <p>Select up to 3 base colors:</p>
             <div className="color-picker-container">
               {userColors.map((color, index) => (
-                <div key={index} className="color-picker glass-card">
+                <div key={index} className="color-picker fancy-picker">
                   <label>Color {index + 1}</label>
                   <input
                     type="color"

@@ -7,11 +7,12 @@ body {
   background: linear-gradient(135deg, #e0eafc, #cfdef3);
   background-size: 200% 200%;
   animation: backgroundShift 8s ease infinite;
-  transition: background 0.5s ease;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-.dark body {
+body.dark {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #eee;
 }
 
 @keyframes backgroundShift {
@@ -30,19 +31,13 @@ body {
   text-align: center;
   padding: 2rem;
   min-height: 100vh;
-  color: #222;
-  transition: color 0.3s ease;
-}
-
-.App.dark {
-  color: #eee;
 }
 
 h1 {
   font-size: 2.8rem;
   background: linear-gradient(45deg, #6366f1, #8b5cf6);
-  background-clip: text;                  /* ✅ Added this */
-  -webkit-background-clip: text;          /* ✅ Still needed for WebKit */
+  background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -87,12 +82,28 @@ h1 {
   padding: 1rem;
 }
 
+/* ✨ Stylish glassy color picker boxes */
+.fancy-picker {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.fancy-picker:hover {
+  transform: scale(1.05);
+}
+
 input[type="color"] {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .palette {
