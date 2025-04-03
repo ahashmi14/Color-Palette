@@ -48,4 +48,17 @@
   .copy-btn:hover {
     background-color: #333;
   }
+
+
+  .copied-msg {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4ade80;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    transition: opacity 0.3s ease;
+  }
+  
+
   

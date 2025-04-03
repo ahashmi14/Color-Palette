@@ -170,15 +170,27 @@ button:hover:enabled {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
+/* 🔠 Palette Name + Hover Edit */
 .palette-title-container {
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .palette-name {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.4rem;
+  font-weight: 700;
   cursor: pointer;
   transition: color 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.palette-name:hover::after {
+  content: " (edit)";
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6366f1;
+  margin-left: 0.5rem;
 }
 
 .palette-name:hover {
@@ -200,6 +212,18 @@ body.dark .palette-name-input {
   background-color: rgba(50, 50, 50, 0.9);
   color: white;
   border-color: #8b5cf6;
+}
+
+.color-code {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  background: linear-gradient(270deg, #a855f7, #6366f1, #ec4899, #f59e0b);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textGradientCycle 6s ease infinite;
 }
 
 .glass-panel {
