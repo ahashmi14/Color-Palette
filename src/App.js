@@ -3,6 +3,7 @@ import "./App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import ColorCard from "./ColorCard";
 import paletteNames from "./paletteNames";
+import FullscreenPreview from "./FullscreenPreview";
 
 function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
@@ -11,6 +12,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [paletteName, setPaletteName] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
+  const [showFullscreen, setShowFullscreen] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -58,6 +60,10 @@ function App() {
 
   return (
     <div className="App">
+      {showFullscreen && (
+        <FullscreenPreview palette={palette} onClose={() => setShowFullscreen(false)} />
+      )}
+
       <div className="top-bar">
         <h1>🎨 Color Palette Generator</h1>
         <button className="toggle-btn" onClick={() => setDarkMode(!darkMode)}>
@@ -146,7 +152,11 @@ function App() {
                 </motion.div>
               ))}
             </div>
-            <button onClick={handleBack}>Back to Picker</button>
+
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2rem" }}>
+              <button onClick={handleBack}>Back to Picker</button>
+              <button onClick={() => setShowFullscreen(true)}>Fullscreen Preview</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
