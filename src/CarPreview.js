@@ -1,12 +1,8 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei";
+import CarModel from "./CarModel";
 import "./CarPreview.css";
-
-function CarModel() {
-  const { scene } = useGLTF("/models/car_render.glb", true);
-  return <primitive object={scene} scale={1.5} />;
-}
 
 function CarPreview({ palette, onClose }) {
   const getBlendedColor = (colors) => {
@@ -38,7 +34,8 @@ function CarPreview({ palette, onClose }) {
       <button className="car-close-btn" onClick={onClose}>
         ← Back
       </button>
-      <Canvas camera={{ position: [0, 1.2, 8], fov: 45 }}>
+      <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
+        {/* Soft showroom lighting */}
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
         <Environment preset="city" background={false} />

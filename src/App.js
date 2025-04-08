@@ -6,7 +6,7 @@ import paletteNames from "./paletteNames";
 import FullscreenPreview from "./FullscreenPreview";
 import CarPreview from "./CarPreview";
 
-function App() {
+function App() { // This is to test github
   const [userColors, setUserColors] = useState(["", "", ""]);
   const [palette, setPalette] = useState([]);
   const [showPalette, setShowPalette] = useState(false);
