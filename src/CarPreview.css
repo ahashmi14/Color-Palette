@@ -25,10 +25,10 @@
 
 .car-palette-name {
   position: absolute;
-  top: 3.6rem; /* ⬇️ moved lower to prevent overlap */
+  top: 6.5rem; /* ⬇️ lowered further */
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: white;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
@@ -36,6 +36,35 @@
   pointer-events: none;
 }
 
+/* 🎛️ Mode Buttons */
+.car-mode-switch {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.car-mode-switch button {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.car-mode-switch button.active {
+  background: white;
+  color: black;
+}
+
+/* 🎨 Color Selection */
 .car-color-options {
   position: absolute;
   top: 1.5rem;
@@ -65,113 +94,114 @@
   box-shadow: 0 0 6px 2px white;
 }
 
-.swatch-label {
+/* 🖌️ Sliders Panel */
+.slider-panel {
   position: absolute;
-  top: -1.2rem;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  color: white;
-  font-size: 0.65rem;
-  opacity: 0.8;
-  white-space: nowrap;
-}
-
-/* Mode Switcher */
-.mode-switcher {
-  position: absolute;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  padding: 0.6rem 1.5rem;
-  border-radius: 12px;
-  display: flex;
-  gap: 1rem;
-  z-index: 10000;
-  color: white;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.mode-switcher button {
-  background: transparent;
-  border: none;
-  color: white;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.mode-switcher button.active {
-  text-decoration: underline;
-  color: #4ade80;
-}
-
-/* Slider Container */
-.slider-container {
-  position: absolute;
-  bottom: 5.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10000;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.2rem 1.5rem;
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 1.2rem 1.8rem;
-  border-radius: 14px;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: fit-content;
+  min-width: 350px;
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.15);
+  transition: box-shadow 0.3s ease;
+
+  /* ✅ FIX: Make responsive */
+  pointer-events: auto;
+  z-index: 10001;
 }
 
-.slider-item {
+.slider-panel.glow {
+  animation: glowPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+  }
+  50% {
+    box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+  }
+  100% {
+    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+  }
+}
+
+/* Slider layout: horizontal */
+.slider-row {
   display: flex;
+  gap: 2.5rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
-  justify-content: space-between;
+  min-width: 100px;
 }
 
-/* Modern RGB Labels */
-.slider-item span {
-  font-size: 1.3125rem; /* ⬆️ 25% larger from 1.05rem */
-  color: white;
-  font-weight: 600;
+.slider-group label {
+  font-size: 1.7rem; /* ✅ 30% larger */
   font-family: monospace;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: currentColor; /* Restores label to RGB color */
 }
 
-/* Modern Glowing Sliders */
-.slider-item input[type="range"] {
-  width: 180px;
+.slider-group input[type="range"] {
+  width: 100px;
   height: 10px;
   -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
+  cursor: pointer;
   outline: none;
-  cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.slider-item input[type="range"]::-webkit-slider-thumb {
+.slider-group input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 24px;
-  width: 24px;
+  height: 22px;
+  width: 22px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #4ade80;
-  box-shadow: 0 0 10px #4ade80aa;
+  background: white;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 12px #0ff;
   cursor: pointer;
 }
 
-.slider-item input[type="range"]::-moz-range-thumb {
-  height: 24px;
-  width: 24px;
+.slider-group input[type="range"]::-moz-range-thumb {
+  height: 22px;
+  width: 22px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #4ade80;
-  box-shadow: 0 0 10px #4ade80aa;
+  background: white;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 12px #0ff;
   cursor: pointer;
+}
+
+/* 🧼 Reset Button */
+.reset-btn {
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  align-self: center;
+  backdrop-filter: blur(5px);
+  transition: background 0.2s ease;
+}
+
+.reset-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

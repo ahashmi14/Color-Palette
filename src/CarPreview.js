@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import CarModel from "./CarModel";
@@ -6,9 +6,18 @@ import { blendColors, getMosaicColors } from "./colorUtils";
 import "./CarPreview.css";
 
 function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
-  const [mode, setMode] = useState("standard"); // 'standard' | 'mosaic'
   const [selectedColors, setSelectedColors] = useState([]);
   const [weights, setWeights] = useState([]);
+  const [mode, setMode] = useState("standard");
+
+  useEffect(() => {
+    if (selectedColors.length === 1) {
+      setWeights([1]);
+    } else if (selectedColors.length > 1) {
+      const equalWeight = 1 / selectedColors.length;
+      setWeights(Array(selectedColors.length).fill(equalWeight));
+    }
+  }, [selectedColors]);
 
   const handleBack = () => {
     if (clickSoundRef?.current) {
@@ -19,47 +28,74 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
   };
 
   const toggleColor = (color) => {
-    setSelectedColors((prev) =>
-      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
-    );
-  };
-
-  const handleWeightChange = (index, value) => {
-    const newWeights = [...weights];
-    newWeights[index] = parseFloat(value);
-    const total = newWeights.reduce((a, b) => a + b, 0) || 1;
-    setWeights(newWeights.map((w) => w / total));
-  };
-
-  let colorToRender = "#000000";
-  let mosaicColors = [];
-
-  if (mode === "standard") {
-    if (selectedColors.length === 0) {
-      colorToRender = blendColors(palette);
+    const idx = selectedColors.indexOf(color);
+    if (idx !== -1) {
+      const updated = [...selectedColors];
+      updated.splice(idx, 1);
+      setSelectedColors(updated);
     } else {
-      colorToRender = blendColors(selectedColors, weights);
+      setSelectedColors([...selectedColors, color]);
     }
-  } else if (mode === "mosaic") {
-    mosaicColors = selectedColors.length ? selectedColors : palette;
-  }
+  };
+
+  const resetSliders = () => {
+    if (selectedColors.length > 1) {
+      const equalWeight = 1 / selectedColors.length;
+      setWeights(Array(selectedColors.length).fill(equalWeight));
+    }
+  };
+
+  const handleSliderChange = (index, newWeight) => {
+    const updated = [...weights];
+    updated[index] = newWeight;
+
+    const total = updated.reduce((sum, w) => sum + w, 0);
+    if (total === 0) return;
+
+    const normalized = updated.map((w) => w / total);
+    setWeights(normalized);
+  };
+
+  const carColor =
+    mode === "standard"
+      ? blendColors(selectedColors, weights)
+      : blendColors(palette); // fallback
+
+  const mosaicColors = mode === "mosaic" ? getMosaicColors(selectedColors) : null;
 
   return (
     <div className="car-preview-overlay">
-      <button className="car-close-btn" onClick={handleBack}>← Back</button>
+      <button className="car-close-btn" onClick={handleBack}>
+        ← Back
+      </button>
 
+      {/* 🔤 Title */}
       {paletteName && <div className="car-palette-name">{paletteName}</div>}
 
-      <div className="car-mode-buttons">
-        <button className={mode === "standard" ? "active" : ""} onClick={() => setMode("standard")}>Standard</button>
-        <button className={mode === "mosaic" ? "active" : ""} onClick={() => setMode("mosaic")}>Mosaic</button>
+      {/* 🎛️ Mode Switch */}
+      <div className="car-mode-switch">
+        <button
+          className={mode === "standard" ? "active" : ""}
+          onClick={() => setMode("standard")}
+        >
+          Standard
+        </button>
+        <button
+          className={mode === "mosaic" ? "active" : ""}
+          onClick={() => setMode("mosaic")}
+        >
+          Mosaic
+        </button>
       </div>
 
+      {/* 🎨 Color Selection */}
       <div className="car-color-options">
         {palette.map((color, idx) => (
           <div
             key={idx}
-            className={`car-swatch ${selectedColors.includes(color) ? "active" : ""}`}
+            className={`car-swatch ${
+              selectedColors.includes(color) ? "active" : ""
+            }`}
             style={{ background: color }}
             onClick={() => toggleColor(color)}
             title={`Color ${idx + 1}`}
@@ -67,32 +103,47 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         ))}
       </div>
 
+      {/* 🎚️ Fine Tuning Sliders */}
       {mode === "standard" && selectedColors.length > 1 && (
-        <div className="slider-container">
-          {selectedColors.map((color, idx) => (
-            <div key={idx} className="slider-item">
-              <label style={{ color }}>{color}</label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={weights[idx] || 1 / selectedColors.length}
-                onChange={(e) => handleWeightChange(idx, e.target.value)}
-              />
-            </div>
-          ))}
+        <div className="slider-panel glow">
+          <div className="slider-row">
+            {selectedColors.map((color, idx) => (
+              <div key={idx} className="slider-group">
+                <label
+                  style={{
+                    color: color,
+                    fontSize: "1.7rem",
+                    fontWeight: "bold",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  {color} – {(weights[idx] * 100).toFixed(0)}%
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={weights[idx] || 0}
+                  onChange={(e) =>
+                    handleSliderChange(idx, parseFloat(e.target.value))
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          <button className="reset-btn" onClick={resetSliders}>
+            Reset Sliders
+          </button>
         </div>
       )}
 
+      {/* 🏎️ Car */}
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
         <Environment preset="city" background={false} />
-        <CarModel
-          color={mode === "mosaic" ? null : colorToRender}
-          mosaicColors={mode === "mosaic" ? mosaicColors : []}
-        />
+        <CarModel color={carColor} mosaicColors={mosaicColors} />
         <OrbitControls enableZoom autoRotate />
       </Canvas>
     </div>

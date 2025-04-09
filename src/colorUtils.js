@@ -1,6 +1,3 @@
-// colorUtils.js
-
-// 🎨 Blends multiple hex colors with optional weights
 export function blendColors(colors, weights = []) {
     if (colors.length === 0) return "#000000";
   
@@ -10,33 +7,24 @@ export function blendColors(colors, weights = []) {
         ? weights
         : Array(colors.length).fill(defaultWeight);
   
-    let totalR = 0,
-      totalG = 0,
-      totalB = 0;
+    let totalR = 0, totalG = 0, totalB = 0;
   
     colors.forEach((hex, i) => {
-      const value = parseInt(hex.slice(1), 16);
-      const r = (value >> 16) & 255;
-      const g = (value >> 8) & 255;
-      const b = value & 255;
+      const val = parseInt(hex.slice(1), 16);
+      const r = (val >> 16) & 255;
+      const g = (val >> 8) & 255;
+      const b = val & 255;
   
       totalR += r * normalizedWeights[i];
       totalG += g * normalizedWeights[i];
       totalB += b * normalizedWeights[i];
     });
   
-    const toHex = (val) =>
-      Math.round(val).toString(16).padStart(2, "0");
-  
-    return (
-      "#" +
-      toHex(totalR) +
-      toHex(totalG) +
-      toHex(totalB)
-    );
+    const toHex = (v) => Math.round(v).toString(16).padStart(2, "0");
+    return `#${toHex(totalR)}${toHex(totalG)}${toHex(totalB)}`;
   }
   
-  // 🧩 Splits color list for mosaic styling (returns as-is)
   export function getMosaicColors(colors) {
-    return colors;
+    return colors.length ? colors : ["#888888"];
   }
+  
