@@ -139,6 +139,7 @@ function App() {
             setShowCarPreview(false);
           }}
           clickSoundRef={clickSoundRef}
+          paletteName={paletteName}
         />
       )}
 

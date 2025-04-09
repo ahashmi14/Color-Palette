@@ -4,7 +4,7 @@ import { OrbitControls, Environment } from "@react-three/drei";
 import CarModel from "./CarModel";
 import "./CarPreview.css";
 
-function CarPreview({ palette, onClose, clickSoundRef }) {
+function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
   const getBlendedColor = (colors) => {
     const rgbList = colors.map((hex) => {
       const val = parseInt(hex.slice(1), 16);
@@ -44,6 +44,14 @@ function CarPreview({ palette, onClose, clickSoundRef }) {
         ← Back
       </button>
 
+      {/* 🔤 Palette Title */}
+      {paletteName && (
+        <div className="car-palette-name">
+          {paletteName}
+        </div>
+      )}
+
+      {/* 🎨 Color Options */}
       <div className="car-color-options">
         <div
           className={`car-swatch ${selectedColor === blendedColor ? "active" : ""}`}
@@ -64,6 +72,7 @@ function CarPreview({ palette, onClose, clickSoundRef }) {
         ))}
       </div>
 
+      {/* 🏎️ Car Scene */}
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
