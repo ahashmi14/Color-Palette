@@ -67,7 +67,10 @@ function App() {
 
   const generateRandomColor = () => {
     return (
-      "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")
+      "#" +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, "0")
     );
   };
 
@@ -80,9 +83,7 @@ function App() {
     playClickSound();
     const picked = userColors.filter((c) => c);
     const needed = 5 - picked.length;
-    const randoms = Array.from({ length: needed }, () =>
-      generateRandomColor()
-    );
+    const randoms = Array.from({ length: needed }, () => generateRandomColor());
     setPalette([...picked, ...randoms]);
     setPaletteName(generateRandomName());
     setShowPalette(true);
@@ -114,7 +115,11 @@ function App() {
     <div className="App">
       {/* 🎵 Audio Elements */}
       <audio ref={clickSoundRef} src="/sounds/clickSound.wav" preload="auto" />
-      <audio ref={backgroundMusicRef} src="/sounds/zenBack.mp3" preload="auto" />
+      <audio
+        ref={backgroundMusicRef}
+        src="/sounds/zenBack.mp3"
+        preload="auto"
+      />
 
       {showFullscreen && (
         <FullscreenPreview
@@ -154,7 +159,14 @@ function App() {
             transition={{ duration: 0.5 }}
             className="glass-panel"
           >
-            <p className="gradient-text" style={{ fontSize: "1.8rem", fontWeight: "700", marginBottom: "2.5rem" }}>
+            <p
+              className="gradient-text"
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: "700",
+                marginBottom: "2.5rem",
+              }}
+            >
               Select up to 3 base colors:
             </p>
 
@@ -193,7 +205,10 @@ function App() {
                   autoFocus
                 />
               ) : (
-                <h2 className="palette-name" onClick={() => setIsEditingName(true)}>
+                <h2
+                  className="palette-name"
+                  onClick={() => setIsEditingName(true)}
+                >
                   {paletteName}
                 </h2>
               )}
@@ -205,14 +220,25 @@ function App() {
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1, type: "spring", stiffness: 120 }}
+                  transition={{
+                    delay: index * 0.1,
+                    type: "spring",
+                    stiffness: 120,
+                  }}
                 >
                   <ColorCard color={color} clickSoundRef={clickSoundRef} />
                 </motion.div>
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2rem" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "1rem",
+                justifyContent: "center",
+                marginBottom: "2rem",
+              }}
+            >
               <button onClick={handleBack}>Back to Picker</button>
               <button onClick={handleOpenFullscreen}>Fullscreen Preview</button>
               <button onClick={handleOpenCarPreview}>3D Car Preview</button>
@@ -251,11 +277,17 @@ function App() {
                 maxWidth: "90vw",
                 zIndex: 9999,
                 textAlign: "center",
+                lineHeight: "1.6",
               }}
               onClick={() => setShowCreditsPopup(false)}
             >
               Car render: "Lamborghini Aventador SVJ SDC ( FREE )" (
-              <a href="https://skfb.ly/6ZNGP" target="_blank" rel="noopener noreferrer" style={{ color: "#4ade80" }}>
+              <a
+                href="https://skfb.ly/6ZNGP"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#4ade80" }}
+              >
                 https://skfb.ly/6ZNGP
               </a>
               ) by SDC PERFORMANCE™️ is licensed under{" "}
@@ -269,7 +301,22 @@ function App() {
               </a>
               .
               <br />
-              <span style={{ opacity: 0.6, display: "block", marginTop: "0.5rem" }}>
+              <br />
+              Music from #Uppbeat (free for Creators!):{" "}
+              <a
+                href="https://uppbeat.io/t/tranquilium/deep-immersion"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#4ade80" }}
+              >
+                https://uppbeat.io/t/tranquilium/deep-immersion
+              </a>
+              <br />
+              License code: ZGDWRGTDVLISYXGC
+              <br />
+              <span
+                style={{ opacity: 0.6, display: "block", marginTop: "0.5rem" }}
+              >
                 (Click to close)
               </span>
             </div>
