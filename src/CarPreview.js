@@ -2,33 +2,13 @@ import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import CarModel from "./CarModel";
+import { blendColors, getMosaicColors } from "./colorUtils";
 import "./CarPreview.css";
 
 function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
-  const getBlendedColor = (colors) => {
-    const rgbList = colors.map((hex) => {
-      const val = parseInt(hex.slice(1), 16);
-      return {
-        r: (val >> 16) & 255,
-        g: (val >> 8) & 255,
-        b: val & 255,
-      };
-    });
-
-    const avg = rgbList.reduce(
-      (acc, cur) => ({
-        r: acc.r + cur.r / rgbList.length,
-        g: acc.g + cur.g / rgbList.length,
-        b: acc.b + cur.b / rgbList.length,
-      }),
-      { r: 0, g: 0, b: 0 }
-    );
-
-    return `rgb(${Math.round(avg.r)}, ${Math.round(avg.g)}, ${Math.round(avg.b)})`;
-  };
-
-  const blendedColor = getBlendedColor(palette);
-  const [selectedColor, setSelectedColor] = useState(blendedColor);
+  const [mode, setMode] = useState("standard"); // 'standard' | 'mosaic'
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [weights, setWeights] = useState([]);
 
   const handleBack = () => {
     if (clickSoundRef?.current) {
@@ -38,46 +18,81 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
     onClose();
   };
 
+  const toggleColor = (color) => {
+    setSelectedColors((prev) =>
+      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
+    );
+  };
+
+  const handleWeightChange = (index, value) => {
+    const newWeights = [...weights];
+    newWeights[index] = parseFloat(value);
+    const total = newWeights.reduce((a, b) => a + b, 0) || 1;
+    setWeights(newWeights.map((w) => w / total));
+  };
+
+  let colorToRender = "#000000";
+  let mosaicColors = [];
+
+  if (mode === "standard") {
+    if (selectedColors.length === 0) {
+      colorToRender = blendColors(palette);
+    } else {
+      colorToRender = blendColors(selectedColors, weights);
+    }
+  } else if (mode === "mosaic") {
+    mosaicColors = selectedColors.length ? selectedColors : palette;
+  }
+
   return (
     <div className="car-preview-overlay">
-      <button className="car-close-btn" onClick={handleBack}>
-        ← Back
-      </button>
+      <button className="car-close-btn" onClick={handleBack}>← Back</button>
 
-      {/* 🔤 Palette Title */}
-      {paletteName && (
-        <div className="car-palette-name">
-          {paletteName}
-        </div>
-      )}
+      {paletteName && <div className="car-palette-name">{paletteName}</div>}
 
-      {/* 🎨 Color Options */}
+      <div className="car-mode-buttons">
+        <button className={mode === "standard" ? "active" : ""} onClick={() => setMode("standard")}>Standard</button>
+        <button className={mode === "mosaic" ? "active" : ""} onClick={() => setMode("mosaic")}>Mosaic</button>
+      </div>
+
       <div className="car-color-options">
-        <div
-          className={`car-swatch ${selectedColor === blendedColor ? "active" : ""}`}
-          style={{ background: blendedColor }}
-          onClick={() => setSelectedColor(blendedColor)}
-          title="Blended Color"
-        >
-          <span className="swatch-label">Mix</span>
-        </div>
         {palette.map((color, idx) => (
           <div
             key={idx}
-            className={`car-swatch ${selectedColor === color ? "active" : ""}`}
+            className={`car-swatch ${selectedColors.includes(color) ? "active" : ""}`}
             style={{ background: color }}
-            onClick={() => setSelectedColor(color)}
+            onClick={() => toggleColor(color)}
             title={`Color ${idx + 1}`}
           />
         ))}
       </div>
 
-      {/* 🏎️ Car Scene */}
+      {mode === "standard" && selectedColors.length > 1 && (
+        <div className="slider-container">
+          {selectedColors.map((color, idx) => (
+            <div key={idx} className="slider-item">
+              <label style={{ color }}>{color}</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={weights[idx] || 1 / selectedColors.length}
+                onChange={(e) => handleWeightChange(idx, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
         <Environment preset="city" background={false} />
-        <CarModel color={selectedColor} />
+        <CarModel
+          color={mode === "mosaic" ? null : colorToRender}
+          mosaicColors={mode === "mosaic" ? mosaicColors : []}
+        />
         <OrbitControls enableZoom autoRotate />
       </Canvas>
     </div>

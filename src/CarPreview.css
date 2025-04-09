@@ -23,9 +23,22 @@
   backdrop-filter: blur(6px);
 }
 
+.car-palette-name {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  pointer-events: none;
+}
+
 .car-color-options {
   position: absolute;
-  top: 1.5rem;
+  top: 4.2rem;
   right: 1.5rem;
   z-index: 10000;
   display: flex;
@@ -38,7 +51,7 @@
 }
 
 .car-swatch {
-  width: 36px;     /* increased by 20% */
+  width: 36px;
   height: 36px;
   border-radius: 6px;
   border: 2px solid white;
@@ -52,26 +65,55 @@
   box-shadow: 0 0 6px 2px white;
 }
 
-.swatch-label {
+.car-mode-buttons {
   position: absolute;
-  top: -1.2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 0.65rem;
-  opacity: 0.8;
-  white-space: nowrap;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10000;
 }
 
-.car-palette-name {
+.car-mode-buttons button {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.car-mode-buttons button.active {
+  background: white;
+  color: black;
+}
+
+.slider-container {
   position: absolute;
-  top: 1.2rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   z-index: 10000;
-  pointer-events: none;
+  display: flex;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.slider-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slider-item label {
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+  color: white;
 }
