@@ -92,7 +92,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* 🎵 Sound Effect */}
       <audio ref={clickSoundRef} src="/sounds/clickSound.wav" preload="auto" />
 
       {showFullscreen && (
@@ -102,7 +101,6 @@ function App() {
             playClickSound();
             setShowFullscreen(false);
           }}
-          clickSoundRef={clickSoundRef}
         />
       )}
 
@@ -110,6 +108,7 @@ function App() {
         <CarPreview
           palette={palette}
           onClose={() => setShowCarPreview(false)}
+          clickSoundRef={clickSoundRef} // ✅ Pass it here
         />
       )}
 
@@ -130,14 +129,7 @@ function App() {
             transition={{ duration: 0.5 }}
             className="glass-panel"
           >
-            <p
-              className="gradient-text"
-              style={{
-                fontSize: "1.8rem",
-                fontWeight: "700",
-                marginBottom: "2.5rem",
-              }}
-            >
+            <p className="gradient-text" style={{ fontSize: "1.8rem", fontWeight: "700", marginBottom: "2.5rem" }}>
               Select up to 3 base colors:
             </p>
 
@@ -176,10 +168,7 @@ function App() {
                   autoFocus
                 />
               ) : (
-                <h2
-                  className="palette-name"
-                  onClick={() => setIsEditingName(true)}
-                >
+                <h2 className="palette-name" onClick={() => setIsEditingName(true)}>
                   {paletteName}
                 </h2>
               )}
@@ -191,25 +180,14 @@ function App() {
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    delay: index * 0.1,
-                    type: "spring",
-                    stiffness: 120,
-                  }}
+                  transition={{ delay: index * 0.1, type: "spring", stiffness: 120 }}
                 >
                   <ColorCard color={color} clickSoundRef={clickSoundRef} />
                 </motion.div>
               ))}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "center",
-                marginBottom: "2rem",
-              }}
-            >
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2rem" }}>
               <button onClick={handleBack}>Back to Picker</button>
               <button onClick={handleOpenFullscreen}>Fullscreen Preview</button>
               <button onClick={handleOpenCarPreview}>3D Car Preview</button>
@@ -252,12 +230,7 @@ function App() {
               onClick={() => setShowCreditsPopup(false)}
             >
               Car render: "Lamborghini Aventador SVJ SDC ( FREE )" (
-              <a
-                href="https://skfb.ly/6ZNGP"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#4ade80" }}
-              >
+              <a href="https://skfb.ly/6ZNGP" target="_blank" rel="noopener noreferrer" style={{ color: "#4ade80" }}>
                 https://skfb.ly/6ZNGP
               </a>
               ) by SDC PERFORMANCE™️ is licensed under{" "}
