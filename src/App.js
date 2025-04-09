@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import ColorCard from "./ColorCard";
@@ -6,7 +6,7 @@ import paletteNames from "./paletteNames";
 import FullscreenPreview from "./FullscreenPreview";
 import CarPreview from "./CarPreview";
 
-function App() { // This is to test github
+function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
   const [palette, setPalette] = useState([]);
   const [showPalette, setShowPalette] = useState(false);
@@ -17,6 +17,8 @@ function App() { // This is to test github
   const [showCarPreview, setShowCarPreview] = useState(false);
   const [showCreditsPopup, setShowCreditsPopup] = useState(false);
 
+  const clickSoundRef = useRef(null);
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
@@ -24,6 +26,13 @@ function App() { // This is to test github
       document.body.classList.remove("dark");
     }
   }, [darkMode]);
+
+  const playClickSound = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play().catch(() => {});
+    }
+  };
 
   const handleColorChange = (index, value) => {
     const updatedColors = [...userColors];
@@ -43,6 +52,7 @@ function App() { // This is to test github
   };
 
   const generatePalette = () => {
+    playClickSound();
     const picked = userColors.filter((c) => c);
     const needed = 5 - picked.length;
     const randoms = Array.from({ length: needed }, () =>
@@ -55,10 +65,21 @@ function App() { // This is to test github
   };
 
   const handleBack = () => {
+    playClickSound();
     setShowPalette(false);
     setPalette([]);
     setPaletteName("");
     setIsEditingName(false);
+  };
+
+  const handleOpenFullscreen = () => {
+    playClickSound();
+    setShowFullscreen(true);
+  };
+
+  const handleOpenCarPreview = () => {
+    playClickSound();
+    setShowCarPreview(true);
   };
 
   const canGenerate = userColors.some((color) => color);
@@ -66,6 +87,9 @@ function App() { // This is to test github
 
   return (
     <div className="App">
+      {/* 🎵 Sound Effect */}
+      <audio ref={clickSoundRef} src="/sounds/clickSound.wav" preload="auto" />
+
       {showFullscreen && (
         <FullscreenPreview
           palette={palette}
@@ -164,7 +188,7 @@ function App() { // This is to test github
                     stiffness: 120,
                   }}
                 >
-                  <ColorCard color={color} />
+                  <ColorCard color={color} clickSoundRef={clickSoundRef} />
                 </motion.div>
               ))}
             </div>
@@ -178,12 +202,8 @@ function App() { // This is to test github
               }}
             >
               <button onClick={handleBack}>Back to Picker</button>
-              <button onClick={() => setShowFullscreen(true)}>
-                Fullscreen Preview
-              </button>
-              <button onClick={() => setShowCarPreview(true)}>
-                3D Car Preview
-              </button>
+              <button onClick={handleOpenFullscreen}>Fullscreen Preview</button>
+              <button onClick={handleOpenCarPreview}>3D Car Preview</button>
             </div>
           </motion.div>
         )}
