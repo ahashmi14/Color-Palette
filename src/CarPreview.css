@@ -1,25 +1,64 @@
 .car-preview-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: black;
-    z-index: 9999;
-  }
-  
-  .car-close-btn {
-    position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
-    z-index: 10000;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    backdrop-filter: blur(6px);
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 9999;
+}
+
+.car-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10000;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.car-color-options {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 10000;
+  display: flex;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  align-items: center;
+}
+
+.car-swatch {
+  width: 36px;     /* increased by 20% */
+  height: 36px;
+  border-radius: 6px;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.car-swatch.active {
+  transform: scale(1.15);
+  box-shadow: 0 0 6px 2px white;
+}
+
+.swatch-label {
+  position: absolute;
+  top: -1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 0.65rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}

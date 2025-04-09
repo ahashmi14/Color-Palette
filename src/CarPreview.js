@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import CarModel from "./CarModel";
 import "./CarPreview.css";
 
 function CarPreview({ palette, onClose }) {
+  // Compute average color
   const getBlendedColor = (colors) => {
     const rgbList = colors.map((hex) => {
       const val = parseInt(hex.slice(1), 16);
@@ -27,19 +28,42 @@ function CarPreview({ palette, onClose }) {
     return `rgb(${Math.round(avg.r)}, ${Math.round(avg.g)}, ${Math.round(avg.b)})`;
   };
 
-  const avgColor = getBlendedColor(palette);
+  const blendedColor = getBlendedColor(palette);
+  const [selectedColor, setSelectedColor] = useState(blendedColor);
 
   return (
     <div className="car-preview-overlay">
       <button className="car-close-btn" onClick={onClose}>
         ← Back
       </button>
+
+      {/* Color Picker */}
+      <div className="car-color-options">
+        <div
+          className={`car-swatch ${selectedColor === blendedColor ? "active" : ""}`}
+          style={{ background: blendedColor }}
+          onClick={() => setSelectedColor(blendedColor)}
+          title="Blended Color"
+        >
+          <span className="swatch-label">Mix</span>
+        </div>
+        {palette.map((color, idx) => (
+          <div
+            key={idx}
+            className={`car-swatch ${selectedColor === color ? "active" : ""}`}
+            style={{ background: color }}
+            onClick={() => setSelectedColor(color)}
+            title={`Color ${idx + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* 3D Car Canvas */}
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
-        {/* Soft showroom lighting */}
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
         <Environment preset="city" background={false} />
-        <CarModel color={avgColor} />
+        <CarModel color={selectedColor} />
         <OrbitControls enableZoom autoRotate />
       </Canvas>
     </div>
