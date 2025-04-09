@@ -18,6 +18,8 @@ function App() {
   const [showCreditsPopup, setShowCreditsPopup] = useState(false);
 
   const clickSoundRef = useRef(null);
+  const backgroundMusicRef = useRef(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -26,6 +28,24 @@ function App() {
       document.body.classList.remove("dark");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    const tryPlayMusic = () => {
+      if (!hasUserInteracted && backgroundMusicRef.current) {
+        backgroundMusicRef.current.volume = 0.15;
+        backgroundMusicRef.current.loop = true;
+        backgroundMusicRef.current.play().catch(() => {});
+        setHasUserInteracted(true);
+      }
+    };
+
+    // Listen to first user interaction
+    window.addEventListener("click", tryPlayMusic, { once: true });
+
+    return () => {
+      window.removeEventListener("click", tryPlayMusic);
+    };
+  }, [hasUserInteracted]);
 
   const playClickSound = () => {
     if (clickSoundRef.current) {
@@ -92,7 +112,9 @@ function App() {
 
   return (
     <div className="App">
+      {/* 🎵 Audio Elements */}
       <audio ref={clickSoundRef} src="/sounds/clickSound.wav" preload="auto" />
+      <audio ref={backgroundMusicRef} src="/sounds/zenBack.mp3" preload="auto" />
 
       {showFullscreen && (
         <FullscreenPreview
@@ -107,8 +129,11 @@ function App() {
       {showCarPreview && (
         <CarPreview
           palette={palette}
-          onClose={() => setShowCarPreview(false)}
-          clickSoundRef={clickSoundRef} // ✅ Pass it here
+          onClose={() => {
+            playClickSound();
+            setShowCarPreview(false);
+          }}
+          clickSoundRef={clickSoundRef}
         />
       )}
 
