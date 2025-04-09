@@ -34,6 +34,11 @@ function App() {
     }
   };
 
+  const toggleDarkMode = () => {
+    playClickSound();
+    setDarkMode(!darkMode);
+  };
+
   const handleColorChange = (index, value) => {
     const updatedColors = [...userColors];
     updatedColors[index] = value;
@@ -93,7 +98,11 @@ function App() {
       {showFullscreen && (
         <FullscreenPreview
           palette={palette}
-          onClose={() => setShowFullscreen(false)}
+          onClose={() => {
+            playClickSound();
+            setShowFullscreen(false);
+          }}
+          clickSoundRef={clickSoundRef}
         />
       )}
 
@@ -106,7 +115,7 @@ function App() {
 
       <div className="top-bar">
         <h1>🎨 Color Palette Generator</h1>
-        <button className="toggle-btn" onClick={() => setDarkMode(!darkMode)}>
+        <button className="toggle-btn" onClick={toggleDarkMode}>
           {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
         </button>
       </div>
