@@ -205,3 +205,9 @@
 .reset-btn:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+.slider-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

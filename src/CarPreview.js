@@ -9,6 +9,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
   const [selectedColors, setSelectedColors] = useState([]);
   const [weights, setWeights] = useState([]);
   const [mode, setMode] = useState("standard");
+  const [autoRotate, setAutoRotate] = useState(true); // NEW: toggle for rotation
 
   useEffect(() => {
     if (selectedColors.length === 1) {
@@ -103,7 +104,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         ))}
       </div>
 
-      {/* 🎚️ Fine Tuning Sliders */}
+      {/* 🎚️ Sliders */}
       {mode === "standard" && selectedColors.length > 1 && (
         <div className="slider-panel glow">
           <div className="slider-row">
@@ -117,7 +118,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
                     fontFamily: "monospace",
                   }}
                 >
-                  {color} – {(weights[idx] * 100).toFixed(0)}%
+                  {color} {Math.round(weights[idx] * 100)}%
                 </label>
                 <input
                   type="range"
@@ -132,9 +133,18 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
               </div>
             ))}
           </div>
-          <button className="reset-btn" onClick={resetSliders}>
-            Reset Sliders
-          </button>
+
+          <div className="slider-actions">
+            <button className="reset-btn" onClick={resetSliders}>
+              Reset Sliders
+            </button>
+            <button
+              className="reset-btn"
+              onClick={() => setAutoRotate((prev) => !prev)}
+            >
+              {autoRotate ? "Make Stationary" : "Rotate"}
+            </button>
+          </div>
         </div>
       )}
 
@@ -144,7 +154,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
         <Environment preset="city" background={false} />
         <CarModel color={carColor} mosaicColors={mosaicColors} />
-        <OrbitControls enableZoom autoRotate />
+        <OrbitControls enableZoom autoRotate={autoRotate} />
       </Canvas>
     </div>
   );
