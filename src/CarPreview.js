@@ -152,7 +152,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />
-        <Environment preset="studio" background={false} />
+        <Environment files="/hdr/bloem_field_sunrise_4k.hdr" background={false} />
         <CarModel color={carColor} mosaicColors={mosaicColors} />
         <OrbitControls enableZoom autoRotate={autoRotate} />
       </Canvas>
