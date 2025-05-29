@@ -25,7 +25,7 @@
 
 .car-palette-name {
   position: absolute;
-  top: 6.5rem; /* ⬇️ lowered further */
+  top: 6.5rem;
   left: 50%;
   transform: translateX(-50%);
   font-size: 2.2rem;
@@ -111,8 +111,6 @@
   min-width: 350px;
   box-shadow: 0 0 12px rgba(0, 255, 200, 0.15);
   transition: box-shadow 0.3s ease;
-
-  /* ✅ FIX: Make responsive */
   pointer-events: auto;
   z-index: 10001;
 }
@@ -150,11 +148,11 @@
 }
 
 .slider-group label {
-  font-size: 1.7rem; /* ✅ 30% larger */
+  font-size: 1.7rem;
   font-family: monospace;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: currentColor; /* Restores label to RGB color */
+  color: currentColor;
 }
 
 .slider-group input[type="range"] {
@@ -210,4 +208,73 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+}
+
+/* 🟣 Rotation Toggle */
+.rotation-toggle {
+  position: absolute;
+  top: 5.5rem;
+  right: 1.5rem;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.rotation-label {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* iOS-style switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #444;
+  transition: 0.4s;
+  border-radius: 26px;
+  box-shadow: 0 0 6px #9333ea;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #c084fc;
+}
+
+input:checked + .slider {
+  background-color: #9333ea;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
 }

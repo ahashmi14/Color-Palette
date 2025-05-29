@@ -9,7 +9,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
   const [selectedColors, setSelectedColors] = useState([]);
   const [weights, setWeights] = useState([]);
   const [mode, setMode] = useState("standard");
-  const [autoRotate, setAutoRotate] = useState(true); // NEW: toggle for rotation
+  const [autoRotate, setAutoRotate] = useState(true);
 
   useEffect(() => {
     if (selectedColors.length === 1) {
@@ -60,7 +60,7 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
   const carColor =
     mode === "standard"
       ? blendColors(selectedColors, weights)
-      : blendColors(palette); // fallback
+      : blendColors(palette);
 
   const mosaicColors = mode === "mosaic" ? getMosaicColors(selectedColors) : null;
 
@@ -70,10 +70,8 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         ← Back
       </button>
 
-      {/* 🔤 Title */}
       {paletteName && <div className="car-palette-name">{paletteName}</div>}
 
-      {/* 🎛️ Mode Switch */}
       <div className="car-mode-switch">
         <button
           className={mode === "standard" ? "active" : ""}
@@ -89,14 +87,11 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         </button>
       </div>
 
-      {/* 🎨 Color Selection */}
       <div className="car-color-options">
         {palette.map((color, idx) => (
           <div
             key={idx}
-            className={`car-swatch ${
-              selectedColors.includes(color) ? "active" : ""
-            }`}
+            className={`car-swatch ${selectedColors.includes(color) ? "active" : ""}`}
             style={{ background: color }}
             onClick={() => toggleColor(color)}
             title={`Color ${idx + 1}`}
@@ -104,7 +99,18 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
         ))}
       </div>
 
-      {/* 🎚️ Sliders */}
+      <div className="rotation-toggle">
+        <span className="rotation-label">Rotation</span>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={autoRotate}
+            onChange={() => setAutoRotate((prev) => !prev)}
+          />
+          <span className="slider"></span>
+        </label>
+      </div>
+
       {mode === "standard" && selectedColors.length > 1 && (
         <div className="slider-panel glow">
           <div className="slider-row">
@@ -138,17 +144,10 @@ function CarPreview({ palette, onClose, clickSoundRef, paletteName }) {
             <button className="reset-btn" onClick={resetSliders}>
               Reset Sliders
             </button>
-            <button
-              className="reset-btn"
-              onClick={() => setAutoRotate((prev) => !prev)}
-            >
-              {autoRotate ? "Make Stationary" : "Rotate"}
-            </button>
           </div>
         </div>
       )}
 
-      {/* 🏎️ Car */}
       <Canvas camera={{ position: [0, 1.2, 9.6], fov: 45 }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[5, 10, 5]} intensity={1.4} castShadow />

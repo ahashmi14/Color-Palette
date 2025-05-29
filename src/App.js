@@ -1,3 +1,5 @@
+// Current Version: Version 1.0.1
+
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { motion, AnimatePresence } from "framer-motion";
