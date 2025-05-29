@@ -1,4 +1,4 @@
-// Current Version: Version 1.0.1
+// Current Version: Version 1.0.2 (Try 2)
 
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
@@ -7,6 +7,7 @@ import ColorCard from "./ColorCard";
 import paletteNames from "./paletteNames";
 import FullscreenPreview from "./FullscreenPreview";
 import CarPreview from "./CarPreview";
+import FooterLogo from "./FooterLogo"; // ✅ NEW
 
 function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
@@ -41,12 +42,8 @@ function App() {
       }
     };
 
-    // Listen to first user interaction
     window.addEventListener("click", tryPlayMusic, { once: true });
-
-    return () => {
-      window.removeEventListener("click", tryPlayMusic);
-    };
+    return () => window.removeEventListener("click", tryPlayMusic);
   }, [hasUserInteracted]);
 
   const playClickSound = () => {
@@ -67,19 +64,11 @@ function App() {
     setUserColors(updatedColors);
   };
 
-  const generateRandomColor = () => {
-    return (
-      "#" +
-      Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, "0")
-    );
-  };
+  const generateRandomColor = () =>
+    "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
 
-  const generateRandomName = () => {
-    const i = Math.floor(Math.random() * paletteNames.length);
-    return paletteNames[i];
-  };
+  const generateRandomName = () =>
+    paletteNames[Math.floor(Math.random() * paletteNames.length)];
 
   const generatePalette = () => {
     playClickSound();
@@ -112,16 +101,12 @@ function App() {
 
   const canGenerate = userColors.some((color) => color);
   const showCredits = !showFullscreen && !showCarPreview;
+  const showFooterLogo = !showFullscreen && !showCarPreview;
 
   return (
     <div className="App">
-      {/* 🎵 Audio Elements */}
       <audio ref={clickSoundRef} src="/sounds/clickSound.wav" preload="auto" />
-      <audio
-        ref={backgroundMusicRef}
-        src="/sounds/zenBack.mp3"
-        preload="auto"
-      />
+      <audio ref={backgroundMusicRef} src="/sounds/zenBack.mp3" preload="auto" />
 
       {showFullscreen && (
         <FullscreenPreview
@@ -162,14 +147,7 @@ function App() {
             transition={{ duration: 0.5 }}
             className="glass-panel"
           >
-            <p
-              className="gradient-text"
-              style={{
-                fontSize: "1.8rem",
-                fontWeight: "700",
-                marginBottom: "2.5rem",
-              }}
-            >
+            <p className="gradient-text" style={{ fontSize: "1.8rem", fontWeight: "700", marginBottom: "2.5rem" }}>
               Select up to 3 base colors:
             </p>
 
@@ -208,10 +186,7 @@ function App() {
                   autoFocus
                 />
               ) : (
-                <h2
-                  className="palette-name"
-                  onClick={() => setIsEditingName(true)}
-                >
+                <h2 className="palette-name" onClick={() => setIsEditingName(true)}>
                   {paletteName}
                 </h2>
               )}
@@ -326,6 +301,8 @@ function App() {
           )}
         </>
       )}
+
+      {showFooterLogo && <FooterLogo />} {/* ✅ NEW */}
     </div>
   );
 }
