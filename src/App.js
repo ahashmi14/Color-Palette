@@ -1,4 +1,4 @@
-// Current Version: Version 1.0.2 (Try 2)
+// Current Version: Version 1.0.2.1 (Preload 3D Model)
 
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
@@ -7,7 +7,8 @@ import ColorCard from "./ColorCard";
 import paletteNames from "./paletteNames";
 import FullscreenPreview from "./FullscreenPreview";
 import CarPreview from "./CarPreview";
-import FooterLogo from "./FooterLogo"; // ✅ NEW
+import FooterLogo from "./FooterLogo";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 function App() {
   const [userColors, setUserColors] = useState(["", "", ""]);
@@ -45,6 +46,14 @@ function App() {
     window.addEventListener("click", tryPlayMusic, { once: true });
     return () => window.removeEventListener("click", tryPlayMusic);
   }, [hasUserInteracted]);
+
+  // ✅ NEW: Preload the 3D car model in the background on page load
+  useEffect(() => {
+    const loader = new GLTFLoader();
+    loader.load("/models/car_render.glb", () => {
+      console.log("🚗 3D car model preloaded.");
+    });
+  }, []);
 
   const playClickSound = () => {
     if (clickSoundRef.current) {
@@ -302,7 +311,7 @@ function App() {
         </>
       )}
 
-      {showFooterLogo && <FooterLogo />} {/* ✅ NEW */}
+      {showFooterLogo && <FooterLogo />}
     </div>
   );
 }
